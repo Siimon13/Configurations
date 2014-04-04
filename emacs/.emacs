@@ -2,6 +2,14 @@
 (require 'auto-complete-config)
 (add-to-list 'ac-dictionary-directories "~/.emacs.d//ac-dict")
 (ac-config-default)
+(require 'auto-complete)
+
+;;Auto complete mode
+(defun auto-complete-mode-maybe ()
+  "No maybe for you. Only AC!"
+  (unless (minibufferp (current-buffer))
+    (auto-complete-mode 1)))
+
 
 ;;(add-to-list 'load-path "/path/to/autopair") ;; comment if autopair.el is in standard load path 
 (require 'autopair)
@@ -16,6 +24,11 @@
 ;;Automatically activates php-mode when in a php file
 ;;(require 'php-mode)
 
+;;MarkDown Mode
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 
 ;;Sets full scren mode
 (custom-set-variables
@@ -152,3 +165,12 @@
        (110 "* %u %?" "~/notes.org" "Notes"))))
  '(remember-annotation-functions (quote (org-remember-annotation)))
  '(remember-handler-functions (quote (org-remember-handler))))
+
+;;fly-mode
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(dolist (hook '(change-log-mode-hook log-edit-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode -1))))
+(dolist (hook '(org-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+(ac-flyspell-workaround)
